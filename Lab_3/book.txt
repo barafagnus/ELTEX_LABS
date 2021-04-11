@@ -1,0 +1,20 @@
+ElemNumber: 1
+StringNumber: 567
+String Edit: qwerty
+DateEdit: 10.04.2021
+
+ElemNumber: 2
+StringNumber: 21
+String Edit: Hi
+DateEdit: 03.03.2021
+
+ElemNumber: 1
+StringNumber: 567
+String Edit: qwerty
+DateEdit: 10.04.2021
+
+ElemNumber: 1
+StringNumber: 3
+String Edit: qwrt
+DateEdit: 10.02.2021
+
