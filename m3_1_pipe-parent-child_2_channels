@@ -1,0 +1,55 @@
+// Двунаправленная связь
+#include <sys/types.h> 
+#include <unistd.h> 
+#include <stdio.h> 
+#include <stdlib.h> 
+#include <locale.h>
+
+int main() { 
+    setlocale(LC_ALL, "Rus");
+    int fd[2], fd_1[2], result; 
+    size_t size; 
+    char string[] = "Hello, world!"; 
+    char string1[] = "qwert, 12345!"; 
+    char resstring[14]; 
+    char resstring1[14]; 
+    pipe(fd); //pipe(fd[0]) - конец канала чтения 
+    pipe(fd_1); //pipe(fd[1]) - конец канала записи
+    result = fork(); 
+    // Если создать процесс не удалось
+    if(result<0) { 
+        printf("Can\'t fork child\n"); 
+    } 
+    // Находимся в родительском процессе, выходной поток не нужен, закрываем его.
+    else if (result > 0) { 
+        close(fd[0]); 
+        write(fd[1], string, 14); // Записываем в pipe 14 байт строку "Hello world!"
+        printf("Parent печатает строку (pipe 1)\n"); 
+        close(fd[1]); 
+        printf("Parent exit\n"); 
+    } 
+    else { 
+        close(fd_1[0]); 
+        close(fd[1]); 
+        printf("Child читает строку (pipe 1)\n"); 
+        read(fd[0], resstring, 14); // Читаем из pipe 14 байт - строку "Hello World!"
+        printf("%s\n", resstring); 
+        close(fd[0]); 
+        printf("Child записывает строку (pipe 2)\n"); 
+        write(fd_1[1], string1, 14); 
+        close(fd_1[1]); 
+        printf("Child exit\n"); 
+    } 
+ 
+    sleep(3); 
+    if (result > 0) { 
+        close(fd_1[1]); 
+        printf("Parent читает строку (pipe 2)\n"); 
+        read(fd_1[0], resstring1, 14); 
+        printf("%s\n", resstring1); 
+        close(fd_1[0]); 
+        printf("Parent exit\n"); 
+    } 
+ 
+    return 0; 
+}
